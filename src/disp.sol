@@ -57,7 +57,7 @@ contract DocumentTracker {
         require(documentMapping[_identifier].owners[msg.sender],"You are not a owner of this file");
         documentMapping[_identifier].owners[ownerAddress] = true;
         //if the ownership transfer from 0 address to a new address then it is ownerAddress
-        documentMapping[_identifier].data.ownerList.push(msg.sender);
+        documentMapping[_identifier].data.ownerList.push(ownerAddress);
         emit OwnerShipTransfer(address(0),ownerAddress);
 
 
