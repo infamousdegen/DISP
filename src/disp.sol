@@ -16,12 +16,14 @@ contract DocumentTracker {
     }
     struct MetaData {
         string Title;
-        bytes32 MetaDataHash;
-        string Name;
+        string Description;
+        ConfidentialityLevel level;
+        address[] ownerList;
         string Type;
         string Size;
         string LastModifiedDate;
-        ConfidentialityLevel level;
+        string MetaDataHash;
+                
 
     }
 
@@ -46,6 +48,7 @@ contract DocumentTracker {
         documentMapping[_identifier].data = _metaData;
         documentMapping[_identifier].owners[msg.sender] = true;
         documentMapping[_identifier]._initialised = 1;
+        documentMapping[_identifier].data.ownerList.push(msg.sender);
         emit Upload(_identifier);
         return(_identifier);
     }
@@ -54,6 +57,7 @@ contract DocumentTracker {
         require(documentMapping[_identifier].owners[msg.sender],"You are not a owner of this file");
         documentMapping[_identifier].owners[ownerAddress] = true;
         //if the ownership transfer from 0 address to a new address then it is ownerAddress
+        documentMapping[_identifier].data.ownerList.push(msg.sender);
         emit OwnerShipTransfer(address(0),ownerAddress);
 
 
@@ -64,6 +68,14 @@ contract DocumentTracker {
         //changing current ownership to false 
         documentMapping[_identifier].owners[msg.sender] = false;
         documentMapping[_identifier].owners[newOwner] = true;
+
+        unchecked {
+            for(uint256 i;i<documentMapping[_identifier].data.ownerList.length;++i){
+                if(documentMapping[_identifier].data.ownerList[i] == msg.sender){
+                    documentMapping[_identifier].data.ownerList[i] = newOwner;
+                }
+            }
+        }
         emit OwnerShipTransfer(msg.sender,newOwner);
     }
 
