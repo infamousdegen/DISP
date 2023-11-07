@@ -4,9 +4,16 @@ pragma solidity ^0.8.13;
 contract DocumentTracker {
 
     enum ConfidentialityLevel {
-        PUBLIC,
-        SECRET,
-        TOPSECRET
+        a,
+        b,
+        c,
+        d,
+        e,
+        f,
+        g,
+        h,
+        i,
+        j
     }
 
     struct Data {
@@ -84,5 +91,11 @@ contract DocumentTracker {
         require(documentMapping[_identifier].owners[msg.sender], " You are not the owner of this id");
 
         return(documentMapping[_identifier].data);
+    }
+
+    function deleteMetadata(string memory _identifier) public returns(bool){
+        require(documentMapping[_identifier].owners[msg.sender], " You are not the owner of this id");
+        delete documentMapping[_identifier];
+        return(true);
     }
 }
